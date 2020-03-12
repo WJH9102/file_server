@@ -29,11 +29,9 @@ public class FileController {
         String[] ymd = FileUtils.getYMD();
         // 拼接当天文件路径
         String nowFilePath = filePath + ymd[0] + File.separator +  ymd[1] + File.separator + ymd[2] + File.separator;
-        System.out.println(nowFilePath);
         // 创建文件夹
         File folder = new File(nowFilePath);
         if (!folder.exists()) {
-            System.out.println("不存在");
             folder.mkdirs();
         }
         // 当前文件后缀

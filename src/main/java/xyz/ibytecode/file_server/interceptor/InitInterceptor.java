@@ -1,7 +1,10 @@
 package xyz.ibytecode.file_server.interceptor;
 
 import com.alibaba.fastjson.JSON;
+import io.jsonwebtoken.*;
+import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
+import xyz.ibytecode.file_server.utils.AuthUtil;
 import xyz.ibytecode.file_server.utils.RsBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,36 +19,31 @@ public class InitInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String token = request.getHeader("token");
-        if (!"fileUpload".equals(token)) return false;
-        return true;
-        /*可扩展
-    try {
-        String token = request.getHeader("X-Token");
-        if (StringUtils.isEmpty(token)) return false;
-        Claims claims = AuthUtil.parseJWT(token);
-        String userInfo = claims.getSubject();
-        Map<String, Object> userMap = (Map<String, Object>) JSON.parse(userInfo);
-        return true;
-    }catch (ExpiredJwtException e){
+        try {
+            String token = request.getHeader("X-Token");
+            if (StringUtils.isEmpty(token)) return false;
+            Claims claims = AuthUtil.parseJWT(token);
+            String userInfo = claims.getSubject();
+            Map<String, Object> userMap = (Map<String, Object>) JSON.parse(userInfo);
+            return true;
+        }catch (ExpiredJwtException e){
 //            System.out.println(e.getClaims().getExpiration());
-        System.out.println("token已失效");
-        returnJson(response);
-        return false;
-    }catch (SignatureException e){
-        System.out.println("签名异常");
-        returnJson(response);
-        return false;
-    }catch (MalformedJwtException e){
-        System.out.println("非法的token");
-        returnJson(response);
-        return false;
-    }catch (UnsupportedJwtException e){
-        System.out.println("不支持的token");
-        returnJson(response);
-        return false;
-    }
-     */
+            System.out.println("token已失效");
+            returnJson(response);
+            return false;
+        }catch (SignatureException e){
+            System.out.println("签名异常");
+            returnJson(response);
+            return false;
+        }catch (MalformedJwtException e){
+            System.out.println("非法的token");
+            returnJson(response);
+            return false;
+        }catch (UnsupportedJwtException e){
+            System.out.println("不支持的token");
+            returnJson(response);
+            return false;
+        }
     }
 
 
